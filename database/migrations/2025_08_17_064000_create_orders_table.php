@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id();
+            $table->ulid();
             $table->tinyText('client_name')->nullable(false);
             $table->enum('status', ['initiated', 'sent', 'delivered'])->default('initiated');
             $table->timestamps();
