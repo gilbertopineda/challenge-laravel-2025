@@ -2,13 +2,18 @@
 
 namespace App\Repositories;
 
-class OrderRepositoryInterface
+use App\Models\Order;
+use Illuminate\Support\Collection;
+
+interface OrderRepositoryInterface
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+    public function all(): Collection;
+
+    public function find(string $id): ?Order;
+
+    public function create(array $data): Order;
+
+    public function update(string $id, array $data): bool;
+
+    public function delete(string $id): bool;
 }

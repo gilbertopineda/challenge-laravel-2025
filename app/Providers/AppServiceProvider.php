@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\ItemRepository;
+use App\Repositories\ItemRepositoryInterface;
 use App\Repositories\OrderRepository;
 use App\Repositories\OrderRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
@@ -13,7 +15,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(OrderRepository::class, OrderRepositoryInterface::class);
+        $this->app->bind(OrderRepositoryInterface::class, OrderRepository::class);
+
+        $this->app->bind(ItemRepositoryInterface::class, ItemRepository::class);
     }
 
     /**

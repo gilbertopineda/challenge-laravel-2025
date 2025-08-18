@@ -9,5 +9,17 @@ class Order extends Model
 {
     use HasUlids;
 
+    protected $attributes = [
+        'status' => 'initiated',
+    ];
 
+    protected $fillable = [
+        'client_name',
+        'status',
+    ];
+
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
 }
