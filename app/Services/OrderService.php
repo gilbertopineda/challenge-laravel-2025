@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Repositories\OrderRepositoryInterface;
+use Illuminate\Support\Collection;
 
 class OrderService
 {
@@ -25,5 +26,10 @@ class OrderService
     public function get(string $id): Order
     {
         return $this->orderRepository->find($id);
+    }
+
+    public function getAll(): Collection
+    {
+        return $this->orderRepository->all();
     }
 }

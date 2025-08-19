@@ -4,12 +4,15 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class OrderRepository implements OrderRepositoryInterface
 {
     public function all(): Collection
     {
-        // TODO: Implement all() method.
+        return Cache::store('redis')->remember('order:all', 30, function () {
+            return Order::with('items')->where('status', '!=', 'delivered')->get();
+        });
     }
 
     public function find(string $id): ?Order

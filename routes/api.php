@@ -12,4 +12,6 @@ Route::controller(OrderController::class)->group(function () {
     Route::post('/orders', 'store');
 
     Route::get('/orders/{id}', 'show');
+
+    Route::get('/orders', 'index');
 });

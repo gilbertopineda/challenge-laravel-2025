@@ -33,4 +33,11 @@ class OrderController extends Controller
 
         return new OrderResource($order);
     }
+
+    public function index()
+    {
+        $orders = $this->orderService->getAll();
+
+        return OrderResource::collection($orders);
+    }
 }
