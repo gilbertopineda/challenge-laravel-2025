@@ -12,7 +12,7 @@ interface ItemRepositoryInterface
 
     public function find(string $id): ?Item;
 
-    public function create(Order $order, array $data): void;
+    public function create(string $orderId, array $data): bool;
 
     public function update(string $id, array $data): bool;
 

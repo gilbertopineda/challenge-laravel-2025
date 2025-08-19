@@ -19,10 +19,8 @@ class ItemRepository implements ItemRepositoryInterface
         // TODO: Implement find() method.
     }
 
-    public function create(Order $order, array $data): void
+    public function create(string $orderId, array $data): bool
     {
-        $orderId = $order->id;
-
         $items = array_map(function ($item) use ($orderId) {
             return [
                 'id' => (string)Str::ulid(),
@@ -32,7 +30,8 @@ class ItemRepository implements ItemRepositoryInterface
                 'order_id' => $orderId,
             ];
         }, $data['items']);
-        Item::insert($items);
+
+        return Item::insert($items);
     }
 
     public function update(string $id, array $data): bool

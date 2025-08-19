@@ -11,7 +11,7 @@ interface OrderRepositoryInterface
 
     public function find(string $id): ?Order;
 
-    public function create(array $data): Order;
+    public function create(array $data): ?Order;
 
     public function update(string $id, array $data): bool;
 

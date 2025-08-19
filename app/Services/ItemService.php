@@ -18,8 +18,8 @@ class ItemService
         $this->itemRepository = $itemRepository;
     }
 
-    public function create(Order $order, array $data): void
+    public function create(string $orderId, array $data): bool
     {
-        $this->itemRepository->create($order, $data);
+        return $this->itemRepository->create($orderId, $data);
     }
 }
