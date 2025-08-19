@@ -1,83 +1,98 @@
-# 🧪 OlaClick Backend Challenge - Laravel Edition
+# Prueba Técnica OlaClick
 
-## 🎯 Objetivo
+Este proyecto es una aplicación Laravel dockerizada que utiliza **PostgreSQL** como base de datos y **Redis** como sistema de caché.
 
-Construir una API RESTful para la gestión de órdenes de un restaurante, implementada en **Laravel**, siguiendo principios **SOLID**, usando **Eloquent ORM**, **PostgreSQL** como base de datos y **Redis** para caché. La solución debe estar **contenedorizada con Docker**.
+## Requerimientos
 
----
+- Docker
+- Docker Compose
 
-## 📌 Requerimientos Funcionales
+## Servicios incluidos
+
+- **app**: Contenedor con PHP 8.2 (php-fpm-alpine) y Laravel.
+- **db**: Contenedor PostgreSQL con volumen persistente.
+- **redis**: Contenedor Redis con volumen persistente.
+
+## Configuración del archivo `.env`
+
+En tu archivo `.env` debes asegurar que las siguientes variables estén configuradas correctamente:
+
+```env
+DB_CONNECTION=pgsql
+DB_HOST=db
+DB_PORT=5432
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=secret
+
+CACHE_DRIVER=redis
+
+REDIS_CLIENT=predis
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+```
+
+## Levantar el proyecto
+
+Ejecuta:
+
+```bash
+docker-compose up --build
+```
+
+Esto iniciará los contenedores de **app**, **db** y **redis**.
+
+El contenedor `app` ejecutará automáticamente:
+
+- `composer install`
+- `php artisan migrate --force`
+- `php artisan serve --host=0.0.0.0 --port=8000`
+
+La aplicación quedará disponible en:  
+[http://0.0.0.0:8000](http://0.0.0.0:8000)
+
+## Endpoints principales
 
 ### 1. Listar órdenes
-- Endpoint: `GET /api/orders`
-- Retorna todas las órdenes activas (`status != 'delivered'`).
-- Debe usar Redis para cachear el resultado (TTL: 30s).
+**GET** `/api/orders`  
+Retorna todas las órdenes activas (`status != 'delivered'`).  
+Usa Redis para cachear el resultado (TTL: 30s).
 
 ### 2. Crear una nueva orden
-- Endpoint: `POST /api/orders`
-- Crea una nueva orden con estado inicial `initiated`.
-- Estructura esperada:
-  ```json
-  {
-    "client_name": "Carlos Gómez",
-    "items": [
-      { "description": "Lomo saltado", "quantity": 1, "unit_price": 60 },
-      { "description": "Inka Kola", "quantity": 2, "unit_price": 10 }
-    ]
-  }
+**POST** `/api/orders`
+
+Ejemplo JSON:
+```json
+{
+  "client_name": "Carlos Gómez",
+  "items": [
+    { "description": "Lomo saltado", "quantity": 1, "unit_price": 60 },
+    { "description": "Inka Kola", "quantity": 2, "unit_price": 10 }
+  ]
+}
+```
+
+Estado inicial: `initiated`.
 
 ### 3. Avanzar estado de una orden
-Endpoint: `POST /api/orders/{id}/advance`
+**POST** `/api/orders/{id}/advance`
 
-Transición:
+Transiciones:
+- `initiated → sent → delivered`
 
-initiated → sent → delivered
-
-Si llega a delivered, la orden debe ser eliminada de la base de datos y del caché.
+Cuando llega a `delivered`, la orden es eliminada de la base de datos y del caché.
 
 ### 4. Ver detalle de una orden
-Endpoint: `GET /api/orders/{id}`
-
+**GET** `/api/orders/{id}`  
 Muestra datos completos incluyendo items, totales y estado actual.
 
-## 🧱 Consideraciones Técnicas
-- Usar Laravel 10+
-- Base de datos: PostgreSQL
-- Cache: Redis
-- Arquitectura REST
-- Principios SOLID aplicados (ej. inyección de dependencias, separación de responsabilidades)
-- Modelado con Eloquent ORM
-- Validaciones robustas con Form Requests
-- Tests unitarios o de feature (al menos 1 funcionalidad)
-- Contenerización con Docker + Docker Compose
+## Volúmenes persistentes
 
-## 📦 Estructura sugerida
-```
-app/
-├── Http/
-│   ├── Controllers/
-│   ├── Requests/
-├── Models/
-├── Services/
-├── Repositories/
-routes/
-├── api.php
-```
+- Base de datos PostgreSQL → `pgdata`
+- Redis → `redisdata`
 
-## 🧪 Extra Points
-- Documentación en Swagger o Postman
-- Seeders y factories para testeo rápido
-- Logs de cambios de estado con timestamps
+De esta forma, los datos no se perderán al reiniciar los contenedores.
 
-## 🚀 Cómo entregar
-- Haz un fork de este repositorio o clónalo como plantilla.
-- Implementa la solución.
-- Incluye instrucciones claras en un README.md para levantar el proyecto con Docker.
-- Comparte el repositorio (público o privado) con el equipo de OlaClick enviando un push.
-
-## ❓ Preguntas opcionales para explicar
-- ¿Cómo asegurarías que esta API escale ante alta concurrencia?
-- ¿Qué estrategia seguirías para desacoplar la lógica del dominio de Laravel/Eloquent?
-- ¿Cómo manejarías versiones de la API en producción?
-
-**¡Mucho éxito!** 💡
+---
+Proyecto listo para desarrollo local con Docker.

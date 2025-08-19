@@ -12,7 +12,7 @@ class OrderRepository implements OrderRepositoryInterface
 {
     private Repository $cache;
     private const CACHE_KEY = 'order:all';
-    private const CACHE_TTL = 60;
+    private const CACHE_TTL = 30;
 
     public function __construct()
     {
