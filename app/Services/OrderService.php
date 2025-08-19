@@ -23,9 +23,19 @@ class OrderService
         return $this->orderRepository->create($data);
     }
 
-    public function get(string $id): Order
+    public function get(string $id): ?Order
     {
-        return $this->orderRepository->find($id);
+        $order = $this->orderRepository->find($id);
+
+        if (!$order) return null;
+
+        $orderTotal = $order->items->sum(function ($item) {
+            return $item->unit_price * $item->quantity;
+        });
+
+        $order->total = $orderTotal;
+
+        return $order;
     }
 
     public function getAll(): Collection
