@@ -130,7 +130,7 @@ Este proyecto incluye tests para validar la funcionalidad de la API. Los tests u
 Dentro del contenedor, ejecuta:
 
 ```bash
-php artisan test
+docker compose exec app php artisan test
 ```
 
 Esto correrá todos los tests ubicados en el directorio `tests/Feature`.
