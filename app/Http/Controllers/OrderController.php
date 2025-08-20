@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Services\ItemService;
 use App\Services\OrderService;
-use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -18,7 +19,7 @@ class OrderController extends Controller
         $this->itemService = $itemService;
     }
 
-    public function store(Request $request)
+    public function store(StoreOrderRequest $request)
     {
         $order = $this->orderService->create($request->only(['client_name']));
 
@@ -47,9 +48,12 @@ class OrderController extends Controller
         return OrderResource::collection($orders);
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateOrderRequest $request, string $id)
     {
-        $updated = $this->orderService->update($id, $request->all());
+        $data = $request->validated();
+
+        $updated = $this->orderService->update($id, $data);
+
         return response()->json(['success' => $updated]);
     }
 }
