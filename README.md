@@ -33,6 +33,31 @@ REDIS_PASSWORD=null
 REDIS_PORT=6379
 ```
 
+## Configuración del archivo `.env.testing`
+
+Para ejecutar los tests correctamente, crea o actualiza el archivo `.env.testing` con las siguientes variables:
+
+```env
+APP_ENV=testing
+
+BCRYPT_ROUNDS=4
+
+DB_CONNECTION=pgsql
+DB_HOST=db
+DB_PORT=5432
+DB_DATABASE=laravel_testing
+DB_USERNAME=laravel
+DB_PASSWORD=secret
+
+SESSION_DRIVER=array
+
+QUEUE_CONNECTION=sync
+
+CACHE_DRIVER=array
+```
+
+Esto asegura que la base de datos de testing y la configuración de cache y sesiones estén aisladas del entorno de desarrollo.
+
 ## Levantar el proyecto
 
 Ejecuta:
@@ -94,5 +119,37 @@ Muestra datos completos incluyendo items, totales y estado actual.
 
 De esta forma, los datos no se perderán al reiniciar los contenedores.
 
+## Ejecutar pruebas automatizadas
+
+Este proyecto incluye tests para validar la funcionalidad de la API. Los tests usan **Pest** y se ejecutan dentro del contenedor `app`.
+
+### 1. Levantar el proyecto e iniciar los contenedores
+
+### 2. Ejecutar los tests
+
+Dentro del contenedor, ejecuta:
+
+```bash
+php artisan test
+```
+
+Esto correrá todos los tests ubicados en el directorio `tests/Feature`.
+
+### 3. Qué validan los tests
+
+Los tests incluidos comprueban:
+
+1. Crear una orden con items correctamente.
+2. Consultar los detalles de una orden.
+3. Listar todas las órdenes existentes y validar la cantidad.
+4. Avanzar el estado de una orden (`initiated → sent → delivered`).
+5. Eliminar una orden cuando llega a estado `delivered`.
+
+### 4. Consideraciones
+
+- Antes de ejecutar los tests, asegúrate de que la base de datos de testing esté configurada correctamente y que `.env.testing` contenga las variables recomendadas.
+- Las factories se utilizan para generar órdenes e items de manera dinámica durante las pruebas.
+- La cache y las sesiones se manejan en memoria usando el driver `array`.
+
 ---
-Proyecto listo para desarrollo local con Docker.
+Proyecto listo para desarrollo local con Docker y ejecución de pruebas automatizadas.

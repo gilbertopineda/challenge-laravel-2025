@@ -16,7 +16,7 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function __construct()
     {
-        $this->cache = Cache::store('redis');
+        $this->cache = Cache::store(env('CACHE_DRIVER'));
     }
 
     public function all(): Collection

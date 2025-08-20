@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model
 {
-    use HasUlids;
+    use HasUlids, HasFactory;
 
     protected $fillable = [
         'description',
@@ -15,6 +16,8 @@ class Item extends Model
         'unit_price',
         'order_id',
     ];
+
+    public $timestamps = false;
 
     public function order()
     {
